@@ -2,21 +2,23 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Load the saved Linear Regression model
+# Load model
 model = joblib.load("linear_regression_productivity_model.pkl")
 
 st.title("Predictive Model for Software Development Productivity")
 st.write("Enter the collaborative tool usage metrics to predict productivity score.")
 
 # User inputs
-num_commits = st.slider("Number of commits", min_value=0, max_value=100, value=20)
-issues_resolved = st.slider("Number of issues resolved", min_value=0, max_value=50, value=10)
-slack_msgs = st.slider("Number of Slack messages", min_value=0, max_value=200, value=50)
-jira_tickets = st.slider("Number of Jira tickets handled", min_value=0, max_value=50, value=8)
-team_velocity = st.slider("Team velocity (story points)", min_value=0, max_value=100, value=30)
+num_commits = st.slider("Number of commits", 0, 100, 20)
+issues_resolved = st.slider("Number of issues resolved", 0, 50, 10)
+slack_msgs = st.slider("Number of Slack messages", 0, 200, 50)
+jira_tickets = st.slider("Number of Jira tickets handled", 0, 50, 8)
+team_velocity = st.slider("Team velocity (story points)", 0, 100, 30)
 
-# Prepare input data as a DataFrame
+# Prepare input dataframe
 input_data = pd.DataFrame({
     "num_commits": [num_commits],
     "issues_resolved": [issues_resolved],
@@ -25,13 +27,69 @@ input_data = pd.DataFrame({
     "team_velocity": [team_velocity]
 })
 
-# Predict productivity
+# Prediction
 predicted_score = model.predict(input_data)[0]
 
 st.subheader("Predicted Productivity Score")
-st.write(f"**{predicted_score:.2f}** (out of 100)")
+st.write(f"### {predicted_score:.2f} (out of 100)")
 
-# Show input values bar chart
 st.subheader("Input Values Overview")
 st.bar_chart(input_data.T)
 
+# --- Additional Visualizations ---
+
+# Load the full dataset (you need to upload or include it in the repo)
+@st.cache_data
+def load_dataset():
+    return pd.read_csv("simulated_productivity_dataset.csv")
+
+df = load_dataset()
+
+st.subheader("Feature Correlation Heatmap")
+corr = df.corr()
+
+fig, ax = plt.subplots()
+sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax)
+st.pyplot(fig)
+
+# Scatter plots of each feature vs productivity
+st.subheader("Feature vs Productivity Scatter Plots")
+for feature in input_data.columns:
+    fig, ax = plt.subplots()
+    ax.scatter(df[feature], df["productivity_score"], alpha=0.3)
+    ax.axvline(x=input_data[feature][0], color='red', linestyle='--', label='Your input')
+    ax.set_xlabel(feature)
+    ax.set_ylabel("Productivity Score")
+    ax.legend()
+    st.pyplot(fig)
+
+# Simulate past predictions history
+st.subheader("Simulated Productivity Predictions History")
+
+history_df = df.sample(30).copy()
+history_df["predicted_score"] = model.predict(history_df[input_data.columns])
+
+fig, ax = plt.subplots()
+ax.plot(history_df.index, history_df["productivity_score"], label="Actual Productivity")
+ax.plot(history_df.index, history_df["predicted_score"], label="Predicted Productivity", linestyle="--")
+ax.set_xlabel("Sample Index")
+ax.set_ylabel("Productivity Score")
+ax.legend()
+st.pyplot(fig)
+
+# Feature importance from Linear Regression coefficients
+st.subheader("Feature Importance (Linear Regression Coefficients)")
+
+coefs = model.coef_
+features = input_data.columns
+
+coef_df = pd.DataFrame({
+    "Feature": features,
+    "Coefficient": coefs
+}).sort_values(by="Coefficient", key=abs, ascending=False)
+
+fig, ax = plt.subplots()
+ax.barh(coef_df["Feature"], coef_df["Coefficient"], color="skyblue")
+ax.set_xlabel("Coefficient Value")
+ax.set_title("Linear Regression Feature Importance")
+st.pyplot(fig)
