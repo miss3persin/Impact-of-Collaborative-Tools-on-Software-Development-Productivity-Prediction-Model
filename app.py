@@ -36,6 +36,23 @@ st.write(f"### {predicted_score:.2f} (out of 100)")
 st.subheader("Input Values Overview")
 st.bar_chart(input_data.T)
 
+# COCOMO estimation
+st.subheader("COCOMO Effort Estimation (Organic Mode)")
+
+# User input for estimated Lines of Code
+kloc = st.number_input("Estimated project size (in KLOC)", min_value=1.0, max_value=1000.0, value=50.0, step=1.0)
+
+# COCOMO basic effort estimation
+def cocomo_estimate(KLOC):
+    a, b = 2.4, 1.05  # Organic mode constants
+    effort = a * (KLOC ** b)  # Effort in Person-Months
+    return effort
+
+estimated_effort = cocomo_estimate(kloc)
+
+st.write(f"**Estimated Effort:** {estimated_effort:.2f} person-months")
+
+
 # --- Additional Visualizations ---
 
 # Load the full dataset (you need to upload or include it in the repo)
