@@ -85,6 +85,37 @@ with st.expander("ℹ️ What is COCOMO and why compare it?"):
     """)
 
 
+# Visualization of the comparison
+import plotly.graph_objects as go
+
+st.subheader("📉 Visual Comparison of Effort Estimates")
+
+effort_data = {
+    "COCOMO Estimate": estimated_effort,
+    "ML-Based Estimate": ml_effort_estimate
+}
+
+fig = go.Figure(data=[
+    go.Bar(
+        x=list(effort_data.keys()),
+        y=list(effort_data.values()),
+        text=[f"{v:.2f}" for v in effort_data.values()],
+        textposition='auto',
+        marker_color=['#636EFA', '#EF553B']
+    )
+])
+
+fig.update_layout(
+    yaxis_title="Effort (Person-Months)",
+    xaxis_title="Estimation Method",
+    title="Effort Estimates: COCOMO vs ML Productivity",
+    template="plotly_dark",
+    height=400
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+
 # --- Additional Visualizations ---
 
 # Load the full dataset (you need to upload or include it in the repo)
