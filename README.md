@@ -1,9 +1,3 @@
-It seems like I can’t do more advanced data analysis right now. Please try again later.
-
-However, I can provide you with the complete `README.md` content here so you can copy and paste it directly into your project:
-
----
-
 # 📈 Predictive Model for Evaluating the Impact of Collaborative Tools on Software Development Productivity
 
 ## 🧠 Project Overview
@@ -135,8 +129,9 @@ COCOMO (Constructive Cost Model) is a traditional effort estimation model based 
 📁 project/
 │
 ├── app.py                  # Streamlit dashboard app
-├── model.joblib            # Trained Random Forest model
 ├── data.csv                # Simulated dataset
+├── model.pkl               # Linear Regression model
+├── predictive model.ipynb  # Code file for training model
 ├── requirements.txt        # Python dependencies
 └── README.md               # Project description
 ```
@@ -149,20 +144,3 @@ COCOMO (Constructive Cost Model) is a traditional effort estimation model based 
 * Improve model accuracy with time-series or team-specific features
 * Add authentication and team-by-team breakdown in dashboard
 * Consider neural networks for more advanced predictions
-
----
-
-## 👨‍💻 Author
-
-Built by \[Your Name] as a final-year university project.
-Guided by the objective to blend **machine learning** with **software engineering estimation models**.
-
----
-
-## 📃 License
-
-MIT License (or your university's license policy)
-
----
-
-Let me know if you’d like the `requirements.txt` file generated too!
