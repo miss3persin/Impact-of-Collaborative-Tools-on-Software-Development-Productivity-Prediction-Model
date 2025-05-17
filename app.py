@@ -36,21 +36,53 @@ st.write(f"### {predicted_score:.2f} (out of 100)")
 st.subheader("Input Values Overview")
 st.bar_chart(input_data.T)
 
-# COCOMO estimation
+# COCOMO Effort Estimation
 st.subheader("COCOMO Effort Estimation (Organic Mode)")
 
-# User input for estimated Lines of Code
+# User input for estimated project size (KLOC)
 kloc = st.number_input("Estimated project size (in KLOC)", min_value=1.0, max_value=1000.0, value=50.0, step=1.0)
 
-# COCOMO basic effort estimation
+# COCOMO basic estimation formula
 def cocomo_estimate(KLOC):
     a, b = 2.4, 1.05  # Organic mode constants
-    effort = a * (KLOC ** b)  # Effort in Person-Months
+    effort = a * (KLOC ** b)  # Person-months
     return effort
 
+# Get COCOMO effort
 estimated_effort = cocomo_estimate(kloc)
+st.write(f"📊 **COCOMO Estimated Effort:** {estimated_effort:.2f} person-months")
 
-st.write(f"**Estimated Effort:** {estimated_effort:.2f} person-months")
+# --- ML to Effort Conversion ---
+st.subheader("Effort Estimate Based on Predicted Productivity")
+
+# Assume some constant output
+estimated_output = 1000  # e.g., LOC, story points
+
+# Prevent divide-by-zero issues
+safe_productivity = max(predicted_score, 1)
+ml_effort_estimate = estimated_output / safe_productivity
+
+st.write(f"🧠 **Estimated Effort from ML Prediction:** {ml_effort_estimate:.2f} person-months (assuming output of 1000 units)")
+
+# Comparison
+st.subheader("Comparison: ML Productivity vs COCOMO Effort")
+if ml_effort_estimate > estimated_effort:
+    st.warning("🔸 ML-based estimate suggests *more effort* may be required than COCOMO predicts.")
+elif ml_effort_estimate < estimated_effort:
+    st.success("✅ ML-based estimate suggests *higher productivity* than COCOMO predicts.")
+else:
+    st.info("⚖️ ML-based and COCOMO estimates are about the same.")
+
+# Optional info box
+with st.expander("ℹ️ What is COCOMO and why compare it?"):
+    st.markdown("""
+    The **COCOMO (Constructive Cost Model)** is a traditional method to estimate software effort based on project size (in KLOC).
+    
+    On the other hand, our **ML model** uses real-time collaboration metrics to predict productivity.  
+    By assuming a fixed output (like 1000 LOC), we estimate how much effort that productivity level might require — and compare it to what COCOMO says.
+
+    This lets us bridge **traditional estimation** and **modern team behavior-based prediction**.
+    """)
 
 
 # --- Additional Visualizations ---
