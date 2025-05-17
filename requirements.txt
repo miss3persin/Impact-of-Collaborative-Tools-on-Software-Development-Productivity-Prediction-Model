@@ -6,3 +6,4 @@ numpy
 matplotlib
 matplotlib
 seaborn
+plotly
