@@ -1,3 +1,4 @@
+
 # 📈 Predictive Model for Evaluating the Impact of Collaborative Tools on Software Development Productivity
 
 ## 🧠 Project Overview
@@ -12,8 +13,8 @@ The goal is to provide data-driven insights for decision-makers in software team
 
 * ✅ **Data Simulation**: Realistic, large-scale synthetic dataset mimicking real-world team behavior (10,000+ samples).
 * ✅ **Preprocessing & Feature Engineering**: Transformation of raw collaboration metrics into model-ready features.
-* ✅ **Machine Learning Models**: Trained and compared Linear Regression and Random Forest models to predict productivity scores.
-* ✅ **Hyperparameter Tuning**: Optimized Random Forest with `GridSearchCV`.
+* ✅ **Machine Learning Models**: Trained and compared Linear Regression, Random Forest, and Gradient Boosting models (with tuned and default versions).
+* ✅ **Hyperparameter Tuning**: Optimized Random Forest and Gradient Boosting with `GridSearchCV`.
 * ✅ **Effort Estimation**: Used the COCOMO model (organic mode) to estimate project effort based on KLOC (thousands of lines of code).
 * ✅ **Effort Comparison**: Converted ML-predicted productivity into estimated effort and compared it with COCOMO's estimate.
 * ✅ **Interactive Streamlit Dashboard**: Easy-to-use dashboard to:
@@ -45,11 +46,12 @@ The goal is to provide data-driven insights for decision-makers in software team
 
    * Linear Regression (baseline)
    * Random Forest (default and tuned)
+   * Gradient Boosting (default and tuned)
 
 3. **Model Evaluation**:
 
    * Metrics: Mean Squared Error (MSE) and R² Score
-   * Best Result: Tuned Random Forest with R² ≈ 0.15
+   * Best Result: Linear Regression with R² ≈ 0.15
 
 4. **Effort Estimation Using COCOMO**:
 
@@ -77,19 +79,9 @@ To run locally:
 * Python 3.8+
 * Required packages:
 
+  ```bash
+  pip install streamlit pandas scikit-learn plotly joblib
   ```
-  streamlit
-  pandas
-  scikit-learn
-  plotly
-  joblib
-  ```
-
-Install with:
-
-```bash
-pip install -r requirements.txt
-```
 
 ### 📦 Running the App
 
@@ -103,11 +95,10 @@ Or deploy free via **[Streamlit Cloud](https://streamlit.io/cloud)**.
 
 ## 📊 Sample Results
 
-**Best Model: Random Forest (Tuned)**
+**Best Model: Linear Regression**
 
-* MSE: 26.26
-* R²: 0.11
-* Best Params: `{'max_depth': 10, 'min_samples_split': 5, 'n_estimators': 100}`
+* MSE: 25.26
+* R²: 0.15
 
 **Interpretation**: The ML model captures general trends but is not perfect (low R²). However, it still offers practical value for productivity comparison and insight.
 
@@ -129,9 +120,9 @@ COCOMO (Constructive Cost Model) is a traditional effort estimation model based 
 📁 project/
 │
 ├── app.py                  # Streamlit dashboard app
-├── data.csv                # Simulated dataset
-├── model.pkl               # Linear Regression model
-├── predictive model.ipynb  # Code file for training model
+├── dataset.csv             # Simulated dataset
+├── best_model.pkl          # Best model (Linear Regression)
+├── predictive_model.ipynb  # Code file for training model
 ├── requirements.txt        # Python dependencies
 └── README.md               # Project description
 ```
