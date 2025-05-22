@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load model
-model = joblib.load("linear_regression_productivity_model.pkl")
+model = joblib.load("best_productivity_model.pkl")
 
 st.title("Predictive Model for Software Development Productivity")
 st.write("Enter the collaborative tool usage metrics to predict productivity score.")
